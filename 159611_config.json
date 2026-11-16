@@ -1,0 +1,10 @@
+{
+  "dividend_yield": 0.0273,
+  "dividend_yield_date": "2026-10-30",
+  "cost": 1.1063,
+  "buy_date": "2026-06-08",
+  "shares": 3000,
+  "webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/715d48f2-fd16-452f-a836-01fcbc1dc661",
+  "bond_10y": 0.0165,
+  "bond_date": "2026-10-30"
+}
