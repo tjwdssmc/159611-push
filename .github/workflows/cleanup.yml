@@ -1,0 +1,49 @@
+name: 仓库清理
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 重写daily_push.yml并移除多余文件
+        run: |
+          mkdir -p .github/workflows
+          cat > .github/workflows/daily_push.yml <<'YAML'
+          name: 159611每日战报
+
+          on:
+            schedule:
+              # 北京时间 15:35 = UTC 07:35,周一到周五
+              - cron: '35 7 * * 1-5'
+            workflow_dispatch:  # 支持手动触发测试
+
+          jobs:
+            push:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-python@v5
+                  with:
+                    python-version: '3.11'
+                - name: 安装依赖
+                  run: pip install -r requirements.txt
+                - name: 推送159611每日战报
+                  env:
+                    FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+                  run: python 159611_push.py
+          YAML
+          rm -rf .github/workflows/.github
+          git rm -f .github/workflows/cleanup.yml || true
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: 恢复仅定时/手动触发的workflow，清理嵌套空文件"
+          git push
