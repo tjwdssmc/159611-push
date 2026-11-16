@@ -1,6 +1,8 @@
 name: 159611每日战报
 
 on:
+  push:
+    branches: [main]
   schedule:
     # 北京时间 15:35 = UTC 07:35,周一到周五
     - cron: '35 7 * * 1-5'
